@@ -53,7 +53,6 @@ export const options: NextAuthOptions = {
       },
       async authorize(credentials): Promise<any> {
         try {
-          console.log(`${process.env.PUBLIC_BACKEND_URL}/auth/login`)
 
           const response = await fetch(`${process.env.PUBLIC_BACKEND_URL}/auth/login`, {
             method: 'POST',
@@ -66,11 +65,9 @@ export const options: NextAuthOptions = {
             }),
           })
 
-          console.log("after responseee")
 
           const data = await response.json()
 
-          console.log(data,"dataaaaaaa")
           
           if (data.success) {
             return {
@@ -94,7 +91,6 @@ export const options: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user, account, profile }) {
 
-      console.log("jwt callback called", token, user, account, profile);  
       if (user) {
         token.user = user;
       }
