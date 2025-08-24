@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { X, Settings, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
+import LogoutButton from "./buttons/LogoutButton";
 
 interface NavItem {
   name: string;
@@ -28,13 +28,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   onClose,
   onNavigate,
 }) => {
-  const router = useRouter();
-
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    router.push("/auth/signin");
-  };
 
   return (
     <>
@@ -132,42 +125,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 
           {/* Footer */}
           <div className="border-t border-gray-200 p-2">
-            {/* Settings */}
-            <button
-              className={`w-full group flex items-center px-3 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 ${
-                sidebarCollapsed && !isMobile
-                  ? "justify-center px-2"
-                  : "justify-start"
-              }`}
-            >
-              <Settings
-                className={`flex-shrink-0 text-gray-400 group-hover:text-gray-500 ${
-                  sidebarCollapsed && !isMobile ? "w-6 h-6" : "w-5 h-5 mr-3"
-                }`}
-              />
-              {(!sidebarCollapsed || isMobile) && (
-                <span className="truncate">Settings</span>
-              )}
-            </button>
 
             {/* Logout */}
-            <button
-              onClick={handleLogout}
-              className={`w-full group flex items-center px-3 py-3 text-sm font-medium text-red-600 rounded-xl hover:bg-red-50 transition-all duration-200 ${
-                sidebarCollapsed && !isMobile
-                  ? "justify-center px-2"
-                  : "justify-start"
-              }`}
-            >
-              <LogOut
-                className={`flex-shrink-0 text-red-500 ${
-                  sidebarCollapsed && !isMobile ? "w-6 h-6" : "w-5 h-5 mr-3"
-                }`}
-              />
-              {(!sidebarCollapsed || isMobile) && (
-                <span className="truncate">Logout</span>
-              )}
-            </button>
+            <LogoutButton sidebarCollapsed={sidebarCollapsed} isMobile={isMobile}/>
           </div>
         </div>
       </div>

@@ -13,5 +13,9 @@ export const QUERY_KEYS = {
   },
   REPORTS: {
     ALL: ['reports'] as const,
+    SUMMARY: ['reports/summary'] as const,
+  },
+  AUTH: {
+    LOGOUT: ['auth/logout'] as const,
   },
 } as const;

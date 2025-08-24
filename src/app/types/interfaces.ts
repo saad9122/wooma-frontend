@@ -77,3 +77,10 @@ export interface IPaginationProps {
   limit? : number
 }
 
+export interface IReportSummary {
+  totalReports: number;
+  totalPaidReports: number;
+  newUsersThisMonth: number;  
+  revenueThisMonth: number;
+}
+

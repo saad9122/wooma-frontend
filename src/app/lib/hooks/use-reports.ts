@@ -19,4 +19,18 @@ export const useGetReports = (params?: IGetReportApiProps) => {
     retry: API_CONFIG.RETRY_ATTEMPTS,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
+  
+};
+
+
+export const useGetReportsSummary = () => {
+
+  return useQuery({
+    queryKey:[...QUERY_KEYS.REPORTS.SUMMARY],
+    queryFn: () => reportApi.getReportsSummary(),
+    staleTime: API_CONFIG.STALE_TIME,
+    retry: API_CONFIG.RETRY_ATTEMPTS,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+  
 };

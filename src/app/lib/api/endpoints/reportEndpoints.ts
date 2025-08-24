@@ -1,5 +1,6 @@
 import { IPaginationProps, IReport, PaginatedApiResponse } from '@/app/types/interfaces';
 import { apiClient } from '../client';
+import { IReportSummary } from '../../../types/interfaces';
 
 export interface IGetReportApiProps extends IPaginationProps {
     status? : string,
@@ -10,9 +11,11 @@ export interface IGetReportApiProps extends IPaginationProps {
 
 export const reportApi = {
   getReports: async (params?: IGetReportApiProps): Promise<PaginatedApiResponse<IReport[]>> => {
-    
-    console.log(params, 'params in api');
-    const response = await apiClient.get('/reports', {params});
+        const response = await apiClient.get('/reports', {params});
+    return response.data;
+  },
+  getReportsSummary: async (): Promise<PaginatedApiResponse<IReportSummary>> => {
+        const response = await apiClient.get('/reports/summary');
     return response.data;
   },
 };
