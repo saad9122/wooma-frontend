@@ -1,44 +1,49 @@
 "use client"
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Phone, ArrowRight, Shield, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { SendOtpResponse, VerifyOtpResponse } from './types';
 
 const public_backend_api_url = process.env.NEXT_PUBLIC_API_URL;
 
 
+type Step = 'phone' | 'otp';
+
 const OTPSignIn = () => {
   const router = useRouter();
-  const [step, setStep] = useState('phone'); // 'phone' or 'otp'
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [resendTimer, setResendTimer] = useState(0);
+  const [step, setStep] = useState<Step>('phone');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
+  const [resendTimer, setResendTimer] = useState<number>(0);
   
-  const otpInputs = useRef([]);
+  const otpInputs = useRef<(HTMLInputElement | null)[]>([]);
 
 
   // Timer for resend OTP
   useEffect(() => {
-    let interval;
+    let interval: NodeJS.Timeout | undefined;
     if (resendTimer > 0) {
       interval = setInterval(() => {
         setResendTimer(prev => prev - 1);
       }, 1000);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [resendTimer]);
 
   // Handle phone number input
-  const handlePhoneChange = (e) => {
+  const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, ''); // Only digits
     setPhoneNumber(value);
     setError('');
   };
 
   // Handle OTP input
-  const handleOtpChange = (index, value) => {
+  const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) return; // Prevent multiple characters
     
     const newOtp = [...otp];
@@ -53,7 +58,7 @@ const OTPSignIn = () => {
   };
 
   // Handle backspace in OTP
-  const handleOtpKeyDown = (index, e) => {
+  const handleOtpKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Backspace' && !otp[index] && index > 0) {
       otpInputs.current[index - 1]?.focus();
     }
@@ -80,7 +85,7 @@ const OTPSignIn = () => {
         }),
       });
 
-      const data = await response.json();
+      const data: SendOtpResponse = await response.json();
 
       if (data.success) {
         setSuccess('OTP sent successfully!');
@@ -120,9 +125,9 @@ const OTPSignIn = () => {
         }),
       });
 
-      const data = await response.json();
+      const data: VerifyOtpResponse = await response.json();
 
-      if (data.success) {
+      if (data.success && data.data) {
         // Store tokens (you might want to use NextAuth session here)
         localStorage.setItem('access_token', data.data.access_token);
         localStorage.setItem('refresh_token', data.data.refresh_token);
@@ -256,10 +261,12 @@ const OTPSignIn = () => {
                   {otp.map((digit, index) => (
                     <input
                       key={index}
-                      ref={el => otpInputs.current[index] = el}
+                      ref={(el: HTMLInputElement | null) => {
+                        if (otpInputs.current) otpInputs.current[index] = el;
+                      }}
                       type="text"
                       inputMode="numeric"
-                      maxLength="1"
+                      maxLength={1}
                       value={digit}
                       onChange={(e) => handleOtpChange(index, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(index, e)}

@@ -18,7 +18,7 @@ export interface IProperty {
   created_at: string;
   updated_at: string;
 
-  user?: IUser;
+  user: IUser;
   address: string;
   postcode: string;
   city?: string | null;

@@ -4,17 +4,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
 import moment from "moment"
 
-interface IReport {
-  id: string
-  created_at: string
-  status: string
-  payment_reference?: string | null
-  user: {
-    id: string
-    phone_number: string
-  }
-  pdf_url?: string
-}
+import { IReport } from '@/app/types/interfaces';
 
 export const reportsColumn: ColumnDef<IReport>[] = [
   {
@@ -61,7 +51,7 @@ export const reportsColumn: ColumnDef<IReport>[] = [
     header: "User ID",
     cell: ({ row }) => {
       const userId = row.original.user?.id
-      return <div className="truncate max-w-[180px]">{userId}</div>
+      return <div className="truncate max-w-[180px]">{userId || 'N/A'}</div>
     },
     size: 20,
   },
@@ -71,7 +61,7 @@ export const reportsColumn: ColumnDef<IReport>[] = [
     header: "User Phone",
     cell: ({ row }) => {
       const phone = row.original.user?.phone_number
-      return <div>{phone}</div>
+      return <div>{phone || 'N/A'}</div>
     },
     size: 20,
   },
