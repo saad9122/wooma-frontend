@@ -1,30 +1,50 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+"use client"
 
-interface AuthState {
-  token: string | null;
-  user: any | null;
-  isAuthenticated: boolean;
-  setToken: (token: string) => void;
-  setUser: (user: any) => void;
-  logout: () => void;
+
+import { create } from "zustand"
+import { persist, createJSONStorage } from "zustand/middleware"
+
+
+export type AuthUser = { id: string; phone?: string; name?: string } | null
+
+
+type AuthState = {
+token: string | null
+user: AuthUser
+isAuthenticated: boolean
+login: (token: string, user?: AuthUser) => void
+logout: () => void
+hydrateFromLocalStorage: () => void
 }
 
+
 export const useAuthStore = create<AuthState>()(
-  persist(
+persist(
     (set) => ({
-      token: null,
-      user: null,
-      isAuthenticated: false,
-      setToken: (token: string) =>
-        set({ token, isAuthenticated: true }),
-      setUser: (user: any) => set({ user }),
-      logout: () =>
-        set({ token: null, user: null, isAuthenticated: false }),
+    token: null,
+    user: null,
+    isAuthenticated: false,
+
+    login: (token, user = null) => {
+    localStorage.setItem("access_token", token)
+    set({ token, user, isAuthenticated: true })
+    },
+
+    logout: () => {
+    localStorage.removeItem("access_token")
+    set({ token: null, user: null, isAuthenticated: false })
+    },
+
+
+    hydrateFromLocalStorage: () => {
+    const token = localStorage.getItem("access_token")
+    set({ token, isAuthenticated: !!token })
+    },
     }),
     {
-      name: 'auth-storage',
-      partialize: (state) => ({ token: state.token, user: state.user }),
+    name: "auth-storage",
+    storage: createJSONStorage(() => localStorage),
+    partialize: (s) => ({ token: s.token, user: s.user, isAuthenticated: s.isAuthenticated }),
     }
   )
-);
+)

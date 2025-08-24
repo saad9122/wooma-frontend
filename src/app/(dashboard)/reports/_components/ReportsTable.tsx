@@ -60,7 +60,6 @@ function ReportsTable<TData, TValue>({ columns, data, total }: DataTableProps<TD
   return (
     <div className="rounded-md border">
       <div className="flex items-center p-4">
-        <ReportsActions/>
       </div>
       <Table>
         <TableHeader>

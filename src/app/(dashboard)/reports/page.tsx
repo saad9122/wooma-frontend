@@ -6,6 +6,9 @@ import { useGetReports } from '@/app/lib/hooks/use-reports';
 import ReportsTable from './_components/ReportsTable';
 import { reportsColumn } from './_components/ReportsTableColumns';
 import { ReportStatus } from '@/app/types/enums';
+import { EmptyState } from '@/app/_components/EmptyState';
+import ReportsActions from './_components/ReportActions';
+import { start } from 'repl';
 
 const page = () => {
     const searchParams = useSearchParams()
@@ -36,10 +39,24 @@ const { data, isLoading, error, refetch } = useGetReports({
   end_date,
 });
 
+  const hasFilters = Boolean(is_paid !== undefined|| status || start_date || end_date);
+
+
   return (
     <div>
-      {
-        data ? <ReportsTable columns={reportsColumn} data={data?.data?.data}  total={data.data.total}/> : <LoaderCircle size={48} strokeWidth={2} color="blue" />
+      <ReportsActions/>
+      
+      {  data && data.data.data.length > 0 ? ( <ReportsTable columns={reportsColumn} data={data?.data?.data}  total={data.data.total}/> ) 
+        : (
+          <EmptyState
+            title="No reports found"
+            description={
+                hasFilters
+                  ? "No reports match the applied filters. Try changing them to see more results."
+                  : "There are no reports available yet."
+              }
+          />
+        )
       }
     </div>
   )

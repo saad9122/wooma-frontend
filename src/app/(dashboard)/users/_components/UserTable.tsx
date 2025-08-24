@@ -60,7 +60,6 @@ function UserTable<TData, TValue>({ columns, data, total }: DataTableProps<TData
   return (
     <div className="rounded-md border">
       <div className="flex items-center p-4">
-        <UserSearch/>
       </div>
       <Table>
         <TableHeader>
