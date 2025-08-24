@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { userApi } from '../api/endpoint';
 import { API_CONFIG, QUERY_KEYS } from '../util/constants';
+import { userApi } from '../api/endpoints/userEndpoints';
 
 export const useUsers = (params?: {
   page?: number;

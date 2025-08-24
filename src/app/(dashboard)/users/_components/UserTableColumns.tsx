@@ -21,7 +21,7 @@ export const userColumns: ColumnDef<IUser>[] = [
     ),
     cell: ({ row }) => {
       const data = row.getValue<string>("id")
-      return <div className="truncate max-w-[180px]">#{data}</div>
+      return <div className="truncate max-w-[180px]">{data}</div>
     },
     size: 20,
   },

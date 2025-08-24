@@ -1,5 +1,5 @@
 import { IUser, PaginatedApiResponse } from '@/app/types/interfaces';
-import { apiClient } from './client';
+import { apiClient } from '../client';
 
 
 export const userApi = {

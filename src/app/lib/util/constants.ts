@@ -10,7 +10,8 @@ export const API_CONFIG = {
 export const QUERY_KEYS = {
   USERS: {
     ALL: ['users'] as const,
-    DETAIL: (id: string) => ['users', id] as const,
-    SEARCH: (query: string) => ['users', 'search', query] as const,
+  },
+  REPORTS: {
+    ALL: ['reports'] as const,
   },
 } as const;

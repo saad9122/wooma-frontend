@@ -72,3 +72,8 @@ export interface ApiError {
   }
 }
 
+export interface IPaginationProps {
+  page? : number,
+  limit? : number
+}
+
